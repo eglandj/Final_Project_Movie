@@ -1,8 +1,87 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<GridPane fx:controller="sample.Controller"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+    <columnConstraints>
+        <ColumnConstraints />
+        <ColumnConstraints />
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+    </rowConstraints>
+    <children>
+        <AnchorPane prefHeight="609.0" prefWidth="907.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <children>
+                <Label fx:id="movie_Title" alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="106.0" prefHeight="65.0" prefWidth="223.0" textAlignment="CENTER" textOverrun="CENTER_WORD_ELLIPSIS" wrapText="true">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
+                <ImageView fx:id="movie_Image" fitHeight="335.0" fitWidth="238.0" layoutX="39.0" layoutY="172.0" pickOnBounds="true" preserveRatio="true" />
+                <Label fx:id="rotten_Tomatoes_Label" alignment="CENTER" layoutX="338.0" layoutY="14.0" prefHeight="20.0" prefWidth="187.0" text="Rotten Tomatoes Ratings" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font></Label>
+                <Label fx:id="movie_DB_Label" alignment="CENTER" layoutX="589.0" layoutY="14.0" prefHeight="20.0" prefWidth="150.0" text="The Movie DB Rating" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font></Label>
+                <ListView layoutX="338.0" layoutY="238.0" prefHeight="357.0" prefWidth="555.0" />
+                <Label fx:id="critic_Score_RT_label" alignment="CENTER" layoutX="308.0" layoutY="50.0" text="Critic Score" textAlignment="CENTER" />
+                <Label fx:id="audience_Score_RT_label" alignment="CENTER" layoutX="467.0" layoutY="50.0" text="Audience Score" textAlignment="CENTER" />
+                <ImageView fx:id="critic_Score_Image" fitHeight="58.0" fitWidth="60.0" layoutX="308.0" layoutY="143.0" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fx:id="audience_Score_Image" fitHeight="58.0" fitWidth="60.0" layoutX="478.0" layoutY="143.0" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fx:id="user_Score_DB_Image" fitHeight="58.0" fitWidth="67.0" layoutX="631.0" layoutY="143.0" pickOnBounds="true" preserveRatio="true" />
+                <Label fx:id="user_score_DB_label" alignment="CENTER" layoutX="636.0" layoutY="49.0" text="User Score" textAlignment="CENTER" />
+                <ComboBox fx:id="movie_Selector_Box" layoutX="39.0" layoutY="58.0" onAction="#movie_Selected" prefWidth="150.0" />
+                <Label fx:id="critic_Percentage_Label" alignment="CENTER" contentDisplay="CENTER" layoutX="308.0" layoutY="81.0" prefHeight="50.0" prefWidth="60.0" textAlignment="CENTER" textOverrun="CENTER_WORD_ELLIPSIS">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Label>
+                <Label fx:id="audience_Percentage_Label" alignment="CENTER" contentDisplay="CENTER" layoutX="478.0" layoutY="81.0" prefHeight="50.0" prefWidth="60.0" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Label>
+                <Label fx:id="user_Percentage_Label" alignment="CENTER" contentDisplay="CENTER" layoutX="634.0" layoutY="81.0" prefHeight="50.0" prefWidth="60.0" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Label>
+                <Label fx:id="consensus_Text_Label" alignment="TOP_CENTER" layoutX="26.0" layoutY="525.0" prefHeight="72.0" prefWidth="262.0" textAlignment="CENTER" textOverrun="CENTER_WORD_ELLIPSIS" wrapText="true">
+                    <font>
+                        <Font name="System Italic" size="12.0" />
+                    </font>
+                </Label>
+                <Label fx:id="critic_Consensus_Label" alignment="CENTER" layoutX="104.0" layoutY="507.0" prefHeight="18.0" prefWidth="106.0" text="Critic Consensus" visible="false">
+                    <font>
+                        <Font name="System Bold Italic" size="12.0" />
+                    </font>
+                </Label>
+                <Label fx:id="average_Rating" layoutX="777.0" layoutY="71.0" text="Average Rating">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Label>
+                <Label fx:id="average_Percentage_Label" alignment="CENTER" contentDisplay="CENTER" layoutX="775.0" layoutY="100.0" prefHeight="85.0" prefWidth="106.0" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="36.0" />
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+    </children>
 </GridPane>
