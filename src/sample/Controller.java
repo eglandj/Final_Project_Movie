@@ -15,6 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -171,8 +172,8 @@ public class Controller {
         }else if(criticImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs rotten\"></span>")){
             Image criticTomatoesPNG = new Image(rottenPNG);
             critic_Score_Image.setImage(criticTomatoesPNG);
-        }else{
-
+        }else {
+            JOptionPane.showMessageDialog(null, "Could not locate a URL for the Rotten Tomato .png");
         }
 
         String audienceImage = pngs.last().toString();
@@ -182,6 +183,8 @@ public class Controller {
         }else if (audienceImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs spilled\"></span>")) {
             Image audienceTomatoesPNG = new Image(audienceSpilledPNG);
             audience_Score_Image.setImage(audienceTomatoesPNG);
+        }else{
+            JOptionPane.showMessageDialog(null, "Could not locate a URL for the Audience Popcorn .png");
         }
     }
     void clear(){
