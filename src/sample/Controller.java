@@ -17,30 +17,10 @@ import org.jsoup.select.Elements;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 
 public class Controller {
-    HashMap<String, String> movieTitleURL;
-    public void initialize() throws IOException {
-
-        //Create a hashmap that holds the institution name and corresponding url
-        movieTitleURL = new HashMap<String, String>();
-        movieTitleURL.put("Avengers Endgame","https://www.rottentomatoes.com/m/avengers_endgame https://www.metacritic.com/movie/avengers-endgame" );
-        movieTitleURL.put("Blazing Saddles","https://www.rottentomatoes.com/m/blazing_saddles https://www.metacritic.com/movie/blazing-saddles");
-        movieTitleURL.put("Captain Marvel","https://www.rottentomatoes.com/m/captain_marvel https://www.metacritic.com/movie/captain-marvel");
-        movieTitleURL.put("The Curse of La Llorona","https://www.rottentomatoes.com/m/the_curse_of_la_llorona_2019" +
-                " https://www.metacritic.com/movie/the-curse-of-la-llorona");
-        movieTitleURL.put("Lord of the Rings: Return of the King","https://www.rottentomatoes.com/m/the_lord_of_the_rings_the_return_of_the_king" +
-                " https://www.metacritic.com/movie/the-lord-of-the-rings-the-return-of-the-king");
-        movieTitleURL.put("Miss Bala","https://www.rottentomatoes.com/m/miss_bala_2019 https://www.metacritic.com/movie/miss-bala-2019");
-        movieTitleURL.put("Tombstone","https://www.rottentomatoes.com/m/tombstone https://www.metacritic.com/movie/tombstone");
-        movieTitleURL.put("Us","https://www.rottentomatoes.com/m/us_2019 https://www.metacritic.com/movie/us");
-
-        movie_Selector_Box.getItems().addAll(movieTitleURL.keySet());
-    }
 
     @FXML
     private Label movie_Title;
@@ -99,94 +79,132 @@ public class Controller {
     @FXML
     void movie_Selected(ActionEvent event) throws IOException {
         clear();
-
         critic_Consensus_Label.setVisible(true);
-        //Connecting to URL's
-        String selectedMovieURL = movieTitleURL.get(movie_Selector_Box.getSelectionModel().getSelectedItem());
-        String [] selectionURLs = selectedMovieURL.split(" ");
-        //System.out.println(selectedMovieURL);
-        Document rottenTomatoes = Jsoup.connect(selectionURLs[0]).get();
-        Document metaCritic = Jsoup.connect(selectionURLs[1]).get();
+        populateSelection();
+    }
 
-        //Setting the Title and year of the movie
-        Element titleOfMovie = rottenTomatoes.selectFirst("h1.mop-ratings-wrap__title.mop-ratings-wrap__title--top");
+    HashMap<String, Movie> movieList;
+    public void initialize() throws IOException {
+        System.out.println("Waiting for counter to reach 8. \nCounter: 0");
+        movieCreator();
+        SortedSet<String> keys = new TreeSet<>(movieList.keySet());
+        movie_Selector_Box.getItems().addAll(keys);
+    }
 
-        Element yearOfMovie = metaCritic.selectFirst("span.release_year.lighter");
+    void populateSelection(){
 
-        movie_Title.setText(titleOfMovie.text() + "\n" + "(" + yearOfMovie.text() + ")");
+        Movie selectedMovie = movieList.get(movie_Selector_Box.getSelectionModel().getSelectedItem());
+        movie_Title.setText(selectedMovie.movieTitle + "\n" + "(" + selectedMovie.movieYear + ")");
+        movie_Image.setImage(selectedMovie.movieImage);
+        consensus_Text_Label.setText(selectedMovie.Consensus);
+        critic_Percentage_Label.setText(selectedMovie.rottenCriticScore);
+        critic_Score_Image.setImage(selectedMovie.rottenTomatoImage);
+        audience_Percentage_Label.setText(selectedMovie.rottenAudienceScore);
+        audience_Score_Image.setImage(selectedMovie.rottenAudienceImage);
+        metascore_Label.setText(selectedMovie.metaScore);
+        user_score_Label.setText(selectedMovie.metaUserScore);
+        average_Percentage_Label.setText(selectedMovie.averageScore);
+    }
 
-        //Setting image of movie
-        String movieImageUrl = rottenTomatoes.selectFirst("img.posterImage.js-lazyLoad").attr("data-src");
-        Image movieImg = new Image(movieImageUrl);
-        movie_Image.setImage(movieImg);
+    void movieCreator() throws IOException{
+        String [] movies = new String [8];
 
-        //Setting Consensus text
-        String consensus = rottenTomatoes.select("p.mop-ratings-wrap__text.mop-ratings-wrap__text--concensus").text();
-        //System.out.println(consensus);
-        consensus_Text_Label.setText(consensus);
+        movies[0] = "https://www.rottentomatoes.com/m/avengers_endgame https://www.metacritic.com/movie/avengers-endgame";
+        movies[1] = "https://www.rottentomatoes.com/m/blazing_saddles https://www.metacritic.com/movie/blazing-saddles";
+        movies[2] = "https://www.rottentomatoes.com/m/captain_marvel https://www.metacritic.com/movie/captain-marvel";
+        movies[3] = "https://www.rottentomatoes.com/m/the_curse_of_la_llorona_2019 " +
+                "https://www.metacritic.com/movie/the-curse-of-la-llorona";
+        movies[4] = "https://www.rottentomatoes.com/m/the_lord_of_the_rings_the_return_of_the_king" +
+                " https://www.metacritic.com/movie/the-lord-of-the-rings-the-return-of-the-king";
+        movies[5] = "https://www.rottentomatoes.com/m/miss_bala_2019 https://www.metacritic.com/movie/miss-bala-2019";
+        movies[6] = "https://www.rottentomatoes.com/m/tombstone https://www.metacritic.com/movie/tombstone";
+        movies[7] = "https://www.rottentomatoes.com/m/us_2019 https://www.metacritic.com/movie/us";
 
-        //Percentage scores
-        String percentScores = rottenTomatoes.select("span.mop-ratings-wrap__percentage").text();
-        //System.out.println(percentScores);
-        String [] splitPercentages = percentScores.split(" ");
-        String criticPercent = splitPercentages[0];
-        String audiencePercent = splitPercentages[1];
-        critic_Percentage_Label.setText(criticPercent);
-        audience_Percentage_Label.setText(audiencePercent);
+        //Create a hashmap that holds movie objects
+        movieList = new HashMap<>();
+        int counter = 0;
+        for (String i : movies){
+            String [] URLs = i.split(" ");
+            Document rottenDoc = Jsoup.connect(URLs[0]).get();
+            Document metaDoc = Jsoup.connect(URLs[1]).get();
 
-        //Metactritic scores
-        String metaPercents = metaCritic.select("span.metascore_w.larger.movie").text();
-        String [] metaPercent = metaPercents.split(" ");
-        int meta_metascore = Integer.parseInt(metaPercent[0]);
-        int user_metascore = (int)(Double.parseDouble(metaPercent[1]) * 10);
-        metascore_Label.setText(meta_metascore + "%");
-        user_score_Label.setText(user_metascore + "%");
+            //Setting the Title and year of the movie
+            String titleOfMovie = rottenDoc.selectFirst("h1.mop-ratings-wrap__title.mop-ratings-wrap__title--top").text();
 
-        //Averaging Scores
-        String rottenCriticPercent = criticPercent.replace("%" ,"");
-        String rottenAudiencePercent = audiencePercent.replace("%","");
-        String average = Integer.toString(((Integer.parseInt(rottenCriticPercent) + Integer.parseInt(rottenAudiencePercent) + meta_metascore +
-                user_metascore) / 4));
-        average_Percentage_Label.setText(average + "%");
+            String yearOfMovie = metaDoc.selectFirst("span.release_year.lighter").text();
 
+            //Setting image of movie
+            String movieImageUrl = rottenDoc.selectFirst("img.posterImage.js-lazyLoad").attr("data-src");
+            Image movieImg = new Image(movieImageUrl);
 
+            //Setting Consensus text
+            String consensus = rottenDoc.select("p.mop-ratings-wrap__text.mop-ratings-wrap__text--concensus").text();
 
-        //Setting URL's of Rotten Tomatoes Image
-        String certFreshPNG = "https://www.rottentomatoes.com/assets/pizza-pie/images/icons/global/cf-lg.3c29eff04f2.png";
-        String freshPNG = "https://www.rottentomatoes.com/assets/pizza-pie/images/icons/global/new-fresh-lg.12e316e31d2.png";
-        String rottenPNG = "https://www.rottentomatoes.com/assets/pizza-pie/images/icons/global/new-rotten-lg.ecdfcf9596f.png";
+            //Percentage scores
+            String percentScores = rottenDoc.select("span.mop-ratings-wrap__percentage").text();
+            String [] splitPercentages = percentScores.split(" ");
+            String criticPercent = splitPercentages[0];
+            String audiencePercent = splitPercentages[1];
 
-        String audienceUprightPNG = "https://www.rottentomatoes.com/assets/pizza-pie/images/icons/global/new-upright.ac91cc241ac.png";
-        String audienceSpilledPNG = "https://www.rottentomatoes.com/assets/pizza-pie/images/icons/global/new-spilled.844ba7ac3d0.png";
+            //Metactritic scores
+            String metaPercents = metaDoc.select("span.metascore_w.larger.movie").text();
+            String [] metaPercent = metaPercents.split(" ");
+            int meta_metascore = Integer.parseInt(metaPercent[0]);
+            int user_metascore = (int)(Double.parseDouble(metaPercent[1]) * 10);
 
-        //Selecting the specific <span> elements
-        Elements pngs = rottenTomatoes.select("span.mop-ratings-wrap__icon.meter-tomato.icon.big.medium-xs");
+            //Averaging Scores
+            String rottenCriticPercent = criticPercent.replace("%" ,"");
+            String rottenAudiencePercent = audiencePercent.replace("%","");
+            String average = Integer.toString(((Integer.parseInt(rottenCriticPercent) + Integer.parseInt(rottenAudiencePercent) + meta_metascore +
+                    user_metascore) / 4));
 
-        String criticImage = pngs.first().toString();
-        if (criticImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs certified_fresh\"></span>")){
-            Image criticTomatoesPNG = new Image(certFreshPNG);
-            critic_Score_Image.setImage(criticTomatoesPNG);
-        }else if (criticImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs fresh\"></span>")){
-            Image criticTomatoesPNG = new Image(freshPNG);
-            critic_Score_Image.setImage(criticTomatoesPNG);
-        }else if(criticImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs rotten\"></span>")){
-            Image criticTomatoesPNG = new Image(rottenPNG);
-            critic_Score_Image.setImage(criticTomatoesPNG);
-        }else {
-            JOptionPane.showMessageDialog(null, "Could not locate a URL for the Rotten Tomato .png");
-        }
+            //Setting URL's of Rotten Tomatoes Image
+            String certFreshPNG = "https://www.rottentomatoes.com/assets/pizza-pie/images/icons/global/cf-lg.3c29eff04f2.png";
+            String freshPNG = "https://www.rottentomatoes.com/assets/pizza-pie/images/icons/global/new-fresh-lg.12e316e31d2.png";
+            String rottenPNG = "https://www.rottentomatoes.com/assets/pizza-pie/images/icons/global/new-rotten-lg.ecdfcf9596f.png";
 
-        String audienceImage = pngs.last().toString();
-        if (audienceImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs upright\"></span>")){
-            Image audienceTomatoesPNG = new Image(audienceUprightPNG);
-            audience_Score_Image.setImage(audienceTomatoesPNG);
-        }else if (audienceImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs spilled\"></span>")) {
-            Image audienceTomatoesPNG = new Image(audienceSpilledPNG);
-            audience_Score_Image.setImage(audienceTomatoesPNG);
-        }else{
-            JOptionPane.showMessageDialog(null, "Could not locate a URL for the Audience Popcorn .png");
+            String audienceUprightPNG = "https://www.rottentomatoes.com/assets/pizza-pie/images/icons/global/new-upright.ac91cc241ac.png";
+            String audienceSpilledPNG = "https://www.rottentomatoes.com/assets/pizza-pie/images/icons/global/new-spilled.844ba7ac3d0.png";
+
+            //Selecting the specific <span> elements for .pngs
+            Elements pngs = rottenDoc.select("span.mop-ratings-wrap__icon.meter-tomato.icon.big.medium-xs");
+
+            String criticImage = pngs.first().toString();
+            Image criticTomatoesPNG;
+            if (criticImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs certified_fresh\"></span>")){
+                criticTomatoesPNG = new Image(certFreshPNG);
+            }else if (criticImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs fresh\"></span>")){
+                criticTomatoesPNG = new Image(freshPNG);
+            }else if(criticImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs rotten\"></span>")){
+                criticTomatoesPNG = new Image(rottenPNG);
+            }else {
+                criticTomatoesPNG = null;
+                JOptionPane.showMessageDialog(null, "Could not locate a URL for the Rotten Tomato .png");
+            }
+
+            String audienceImage = pngs.last().toString();
+            Image audienceTomatoesPNG;
+            if (audienceImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs upright\"></span>")){
+                audienceTomatoesPNG = new Image(audienceUprightPNG);
+            }else if (audienceImage.equals("<span class=\"mop-ratings-wrap__icon meter-tomato icon big medium-xs spilled\"></span>")) {
+                audienceTomatoesPNG = new Image(audienceSpilledPNG);
+            }else{
+                audienceTomatoesPNG = null;
+                JOptionPane.showMessageDialog(null, "Could not locate a URL for the Audience Popcorn .png");
+            }
+
+            /*Movie(String title, String year, Image imageOfMovie, String criticConsensus, String criticScoreRotten, Image criticImageTomato,
+                    String audienceScoreRotten, Image audienceImagePopcorn, String metascore, String userscore, String average)*/
+            Movie movie = new Movie(titleOfMovie, yearOfMovie, movieImg, consensus, criticPercent, criticTomatoesPNG, audiencePercent, audienceTomatoesPNG,
+                    meta_metascore + "%", user_metascore + "%", average + "%");
+
+            movieList.put(movie.movieTitle, movie);
+
+            counter++;
+            System.out.println("Counter: " + counter);
         }
     }
+
     void clear(){
         movie_Title.setText(null);
         movie_Image.setImage(null);
