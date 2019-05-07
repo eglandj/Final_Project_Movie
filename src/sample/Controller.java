@@ -121,20 +121,25 @@ public class Controller {
         movies[7] = "https://www.rottentomatoes.com/m/us_2019 https://www.metacritic.com/movie/us";
 
         final int MAX = movies.length;
-        final JFrame frame = new JFrame("Progress Bar");
+        final JFrame frame = new JFrame();
 
         // creates progress bar
         final JProgressBar pb = new JProgressBar();
         pb.setMinimum(0);
         pb.setMaximum(MAX);
         pb.setStringPainted(true);
+        pb.setSize(1000,900);
+
+        JLabel label = new JLabel("Gathering Data");
+        frame.getContentPane().add(label);
 
         // add progress bar
         frame.setLayout(new FlowLayout());
         frame.getContentPane().add(pb);
         frame.setLocation(650,350);
 
-        frame.setSize(250, 80);
+
+        frame.setSize(200, 100);
         frame.setVisible(true);
 
         //Create a hashmap that holds movie objects
