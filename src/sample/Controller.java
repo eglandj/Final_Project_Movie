@@ -16,6 +16,7 @@ import org.jsoup.select.Elements;
 
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.util.*;
 
@@ -85,7 +86,6 @@ public class Controller {
 
     HashMap<String, Movie> movieList;
     public void initialize() throws IOException {
-        System.out.println("Waiting for counter to reach 8. \nCounter: 0");
         movieCreator();
         SortedSet<String> keys = new TreeSet<>(movieList.keySet());
         movie_Selector_Box.getItems().addAll(keys);
@@ -120,10 +120,28 @@ public class Controller {
         movies[6] = "https://www.rottentomatoes.com/m/tombstone https://www.metacritic.com/movie/tombstone";
         movies[7] = "https://www.rottentomatoes.com/m/us_2019 https://www.metacritic.com/movie/us";
 
+        final int MAX = movies.length;
+        final JFrame frame = new JFrame("Progress Bar");
+
+        // creates progress bar
+        final JProgressBar pb = new JProgressBar();
+        pb.setMinimum(0);
+        pb.setMaximum(MAX);
+        pb.setStringPainted(true);
+
+        // add progress bar
+        frame.setLayout(new FlowLayout());
+        frame.getContentPane().add(pb);
+        frame.setLocation(600,350);
+
+        frame.setSize(300, 100);
+        frame.setVisible(true);
+
         //Create a hashmap that holds movie objects
         movieList = new HashMap<>();
         int counter = 0;
         for (String i : movies){
+
             String [] URLs = i.split(" ");
             Document rottenDoc = Jsoup.connect(URLs[0]).get();
             Document metaDoc = Jsoup.connect(URLs[1]).get();
@@ -201,8 +219,20 @@ public class Controller {
             movieList.put(movie.movieTitle, movie);
 
             counter++;
-            System.out.println("Counter: " + counter);
+            // update progressbar
+            final int currentValue = counter;
+            try {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        pb.setValue(currentValue);
+                    }
+                });
+                java.lang.Thread.sleep(100);
+            } catch (InterruptedException e) {
+                JOptionPane.showMessageDialog(frame, e.getMessage());
+            }
         }
+        frame.setVisible(false);
     }
 
     void clear(){
