@@ -132,9 +132,9 @@ public class Controller {
         // add progress bar
         frame.setLayout(new FlowLayout());
         frame.getContentPane().add(pb);
-        frame.setLocation(600,350);
+        frame.setLocation(650,350);
 
-        frame.setSize(300, 100);
+        frame.setSize(250, 80);
         frame.setVisible(true);
 
         //Create a hashmap that holds movie objects
