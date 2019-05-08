@@ -14,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.sql.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,6 +77,16 @@ public class Controller {
 
     @FXML
     private Label user_score_text_Label;
+
+    @FXML
+    public void createButton(ActionEvent actionEvent) throws SQLException {
+        try{
+            databaseCreate();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     @FXML
     void movie_Selected(ActionEvent event) throws IOException {
@@ -243,6 +254,47 @@ public class Controller {
         frame.setVisible(false);
     }
 
+    void databaseCreate() throws SQLException, ClassNotFoundException {
+
+        Movie selectedMovie = movieList.get(movie_Selector_Box.getSelectionModel().getSelectedItem());
+        try {
+            // create a mysql database connection
+            String myDriver = "com.mysql.jdbc.Driver";
+            String myUrl = "jdbc:mysql://localhost/myadvan8_final_project_movie";
+            Class.forName(myDriver);
+
+            Connection conn = DriverManager.getConnection(myUrl, "", "");
+
+            // the mysql insert statement
+            String query = " insert into movies (movieTitle, movieYear, movieImage, Consensus, rottenCriticScore, rottenTomatoImage, rottenAudienceScore, " +
+                    "rottenAudienceImage, metaScore, metaUserScore, averageScore)"
+                    + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            // create the mysql insert prepared statement
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setString(1, selectedMovie.movieTitle);
+            preparedStmt.setString(2, selectedMovie.movieYear);
+            preparedStmt.setString(3, selectedMovie.movieImage.toString());
+            preparedStmt.setString(4, selectedMovie.Consensus);
+            preparedStmt.setString(5, selectedMovie.rottenCriticScore);
+            preparedStmt.setString(6, selectedMovie.rottenTomatoImage.toString());
+            preparedStmt.setString(7, selectedMovie.rottenAudienceScore);
+            preparedStmt.setString(8, selectedMovie.rottenAudienceImage.toString());
+            preparedStmt.setString(9, selectedMovie.metaScore);
+            preparedStmt.setString(10, selectedMovie.metaUserScore);
+            preparedStmt.setString(10, selectedMovie.averageScore);
+
+            // execute the preparedstatement
+            preparedStmt.execute();
+
+            conn.close();
+        }catch (Exception e){
+            System.err.println("Got an exception!");
+            System.err.println(e.getMessage());
+        }
+
+    }
+
     void clear(){
         movie_Title.setText(null);
         movie_Image.setImage(null);
@@ -252,4 +304,5 @@ public class Controller {
         critic_Percentage_Label.setText(null);
         audience_Percentage_Label.setText(null);
     }
+
 }
