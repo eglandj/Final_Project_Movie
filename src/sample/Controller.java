@@ -144,7 +144,10 @@ public class Controller {
 
         //Create a hashmap that holds movie objects
         movieList = new HashMap<>();
+
+        //Counter for progress bar
         int counter = 0;
+
         for (String i : movies){
 
             String [] URLs = i.split(" ");
