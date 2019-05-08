@@ -143,7 +143,7 @@ public class Controller {
         pb.setStringPainted(true);
         pb.setSize(1000,900);
 
-        JLabel label = new JLabel("Gathering Data");
+        JLabel label = new JLabel("Loading Data");
         frame.getContentPane().add(label);
 
         // add progress bar
