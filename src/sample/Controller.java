@@ -16,6 +16,8 @@ import org.jsoup.select.Elements;
 
 import java.sql.*;
 
+import java.net.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -257,15 +259,20 @@ public class Controller {
     void databaseCreate() throws SQLException, ClassNotFoundException {
 
         Movie selectedMovie = movieList.get(movie_Selector_Box.getSelectionModel().getSelectedItem());
+
+        String link = "eglandj";
+        String linked = "{f4YbHR6";
         try {
             // create a mysql database connection
             String myDriver = "com.mysql.jdbc.Driver";
-            String myUrl = "jdbc:mysql://localhost/myadvan8_final_project_movie";
+            String myUrl = "jdbc:mysql://db4free.net:3306/final_project_4?verifyServerCertificate=false&useSSL=false";
             Class.forName(myDriver);
+            System.out.println("Driver Created");
 
-            Connection conn = DriverManager.getConnection(myUrl, "", "");
+            Connection conn = DriverManager.getConnection(myUrl, link, linked);
+            System.out.println("Connection made");
 
-            // the mysql insert statement
+            /*// the mysql insert statement
             String query = " insert into movies (movieTitle, movieYear, movieImage, Consensus, rottenCriticScore, rottenTomatoImage, rottenAudienceScore, " +
                     "rottenAudienceImage, metaScore, metaUserScore, averageScore)"
                     + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -285,9 +292,10 @@ public class Controller {
             preparedStmt.setString(10, selectedMovie.averageScore);
 
             // execute the preparedstatement
-            preparedStmt.execute();
+            preparedStmt.execute();*/
 
             conn.close();
+            System.out.println("Connection closed.");
         }catch (Exception e){
             System.err.println("Got an exception!");
             System.err.println(e.getMessage());
