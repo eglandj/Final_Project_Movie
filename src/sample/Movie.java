@@ -18,6 +18,7 @@ public class Movie {
     public StringProperty averageScore;
 
     public StringProperty getMovieTitle() {
+
         return movieTitle;
     }
 
@@ -25,22 +26,26 @@ public class Movie {
         return movieYear;
     }
     public StringProperty getConsensus() {
-        return Consensus;
+        return
+                Consensus;
     }
     public StringProperty getRottenCriticScore() {
         return rottenCriticScore;
     }
     public StringProperty getRottenAudienceScore() {
+
         return rottenAudienceScore;
     }
-
     public StringProperty getMetaScore() {
+
         return metaScore;
     }
     public StringProperty getMetaUserScore() {
+
         return metaUserScore;
     }
     public StringProperty getAverageScore() {
+
         return averageScore;
     }
 

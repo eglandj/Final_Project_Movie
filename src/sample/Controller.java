@@ -151,16 +151,16 @@ public class Controller {
     void populateSelection(){
 
         Movie selectedMovie = movieList.get(movie_Selector_Box.getSelectionModel().getSelectedItem());
-        movie_Title.setText(selectedMovie.getMovieTitle() + "\n" + "(" + selectedMovie.getMovieYear() + ")");
+        movie_Title.setText(selectedMovie.movieTitle.getValue() + "\n" + "(" + selectedMovie.movieYear.getValue() + ")");
         movie_Image.setImage(selectedMovie.movieImage);
-        consensus_Text_Label.setText(selectedMovie.getConsensus().toString());
-        critic_Percentage_Label.setText(selectedMovie.getRottenCriticScore().toString());
+        consensus_Text_Label.setText(selectedMovie.Consensus.getValue());
+        critic_Percentage_Label.setText(selectedMovie.getRottenCriticScore().getValue());
         critic_Score_Image.setImage(selectedMovie.rottenTomatoImage);
-        audience_Percentage_Label.setText(selectedMovie.getRottenAudienceScore().toString());
+        audience_Percentage_Label.setText(selectedMovie.getRottenAudienceScore().getValue());
         audience_Score_Image.setImage(selectedMovie.rottenAudienceImage);
-        metascore_Label.setText(selectedMovie.getMetaScore().toString());
-        user_score_Label.setText(selectedMovie.getMetaUserScore().toString());
-        average_Percentage_Label.setText(selectedMovie.getAverageScore().toString());
+        metascore_Label.setText(selectedMovie.getMetaScore().getValue());
+        user_score_Label.setText(selectedMovie.getMetaUserScore().getValue());
+        average_Percentage_Label.setText(selectedMovie.getAverageScore().getValue());
     }
 
     void movieCreator() throws IOException{
@@ -281,7 +281,7 @@ public class Controller {
             Movie movie = new Movie(titleOfMovie, yearOfMovie, movieImg, consensus, criticPercent, criticTomatoesPNG, audiencePercent, audienceTomatoesPNG,
                     meta_metascore + "%", user_metascore + "%", average + "%");
 
-            movieList.put(movie.getMovieTitle().toString(), movie);
+            movieList.put(movie.getMovieTitle().getValue(), movie);
 
             counter++;
             // update progressbar
