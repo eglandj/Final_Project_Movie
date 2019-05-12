@@ -34,6 +34,10 @@ public class Controller {
     private static final String myDriver = "com.mysql.jdbc.Driver";
     private static final String myUrl = "jdbc:mysql://db4free.net:3306/final_project_4?verifyServerCertificate=false&useSSL=false";
 
+    HashMap<String, Movie> movieList;
+    List<String> movieTitleList;
+    String optionMovie;
+
     @FXML
     private Label movie_Title;
 
@@ -92,6 +96,9 @@ public class Controller {
     private Button create_Button;
 
     @FXML
+    private Button update_Button;
+
+    @FXML
     private Button delete_button;
 
     @FXML
@@ -118,42 +125,45 @@ public class Controller {
         private TableColumn<Movie, String> average_col;
 
     @FXML
-    public void createButton(ActionEvent actionEvent) throws SQLException {
-        try{
-            databaseCreate();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void createButton(ActionEvent actionEvent) {
+        databaseCreate();
+        showContent(optionMovie);
+        movie_Selector_Box.setValue(null);
+    }
+
+    @FXML
+    void updateButton(ActionEvent event) {
 
     }
 
     @FXML
     public void deleteButton(ActionEvent actionEvent) {
         databaseDelete();
+        showContent(optionMovie);
+        movie_Selector_Box.setValue(null);
     }
 
     @FXML
     void movie_Selected(ActionEvent event) throws IOException {
         clear();
-        populateSelection();
-        showContent();
+        optionMovie = populateSelection();
+        showContent(optionMovie);
     }
 
-    HashMap<String, Movie> movieList;
     public void initialize() throws IOException {
-        fillTable();
+        fillTable(null);
         movieCreator();
         SortedSet<String> keys = new TreeSet<>(movieList.keySet());
         movie_Selector_Box.getItems().addAll(keys);
         clear();
     }
 
-    void populateSelection(){
+    String populateSelection(){
 
         Movie selectedMovie = movieList.get(movie_Selector_Box.getSelectionModel().getSelectedItem());
         movie_Title.setText(selectedMovie.movieTitle.getValue() + "\n" + "(" + selectedMovie.movieYear.getValue() + ")");
         movie_Image.setImage(selectedMovie.movieImage);
-        consensus_Text_Label.setText(selectedMovie.Consensus.getValue());
+        consensus_Text_Label.setText(selectedMovie.getConsensus().getValue());
         critic_Percentage_Label.setText(selectedMovie.getRottenCriticScore().getValue());
         critic_Score_Image.setImage(selectedMovie.rottenTomatoImage);
         audience_Percentage_Label.setText(selectedMovie.getRottenAudienceScore().getValue());
@@ -161,6 +171,8 @@ public class Controller {
         metascore_Label.setText(selectedMovie.getMetaScore().getValue());
         user_score_Label.setText(selectedMovie.getMetaUserScore().getValue());
         average_Percentage_Label.setText(selectedMovie.getAverageScore().getValue());
+
+        return selectedMovie.getMovieTitle().getValue();
     }
 
     void movieCreator() throws IOException{
@@ -300,7 +312,7 @@ public class Controller {
         frame.setVisible(false);
     }
 
-    void databaseCreate() throws SQLException, ClassNotFoundException {
+    void databaseCreate(){
 
         Movie selectedMovie = movieList.get(movie_Selector_Box.getSelectionModel().getSelectedItem());
 
@@ -319,18 +331,33 @@ public class Controller {
 
             // create the mysql insert prepared statement
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1, selectedMovie.getMovieTitle().toString());
-            preparedStmt.setString(2, selectedMovie.getMovieYear().toString());
-            preparedStmt.setString(3, selectedMovie.getConsensus().toString());
-            preparedStmt.setString(4, selectedMovie.getRottenCriticScore().toString());
-            preparedStmt.setString(5, selectedMovie.getRottenAudienceScore().toString());
-            preparedStmt.setString(6, selectedMovie.getMetaScore().toString());
-            preparedStmt.setString(7, selectedMovie.getMetaUserScore().toString());
-            preparedStmt.setString(8, selectedMovie.getAverageScore().toString());
+            preparedStmt.setString(1, selectedMovie.getMovieTitle().getValue());
+            preparedStmt.setString(2, selectedMovie.getMovieYear().getValue());
+            preparedStmt.setString(3, selectedMovie.getConsensus().getValue());
+            preparedStmt.setString(4, selectedMovie.getRottenCriticScore().getValue());
+            preparedStmt.setString(5, selectedMovie.getRottenAudienceScore().getValue());
+            preparedStmt.setString(6, selectedMovie.getMetaScore().getValue());
+            preparedStmt.setString(7, selectedMovie.getMetaUserScore().getValue());
+            preparedStmt.setString(8, selectedMovie.getAverageScore().getValue());
 
             // execute the preparedstatement
             preparedStmt.execute();
             System.out.println("Record Created");
+
+            ObservableList<Movie> databaseMovieList = FXCollections.observableArrayList();
+            String title ="", year="", consensus="", criticScore="", audienceScore="", metascore="", userScore="", average="";
+
+            movie_title_col.setCellValueFactory(cellData -> cellData.getValue().getMovieTitle());
+            movie_year_col.setCellValueFactory(cellData -> cellData.getValue().getMovieYear());
+            critic_col.setCellValueFactory(cellData -> cellData.getValue().getRottenCriticScore());
+            audience_col.setCellValueFactory(cellData -> cellData.getValue().getRottenAudienceScore());
+            metascore_col.setCellValueFactory(cellData -> cellData.getValue().getMetaScore());
+            user_col.setCellValueFactory(cellData -> cellData.getValue().getMetaUserScore());
+            average_col.setCellValueFactory(cellData -> cellData.getValue().getAverageScore());
+
+            Statement sql_statement = null; ResultSet rs1 = null;
+
+            fillTable(conn);
 
             conn.close();
             System.out.println("Connection closed.");
@@ -352,7 +379,7 @@ public class Controller {
             Connection conn = DriverManager.getConnection(myUrl, link, linked);
             System.out.println("Connection made");
 
-            String sql = "DELETE FROM movies WHERE movieTitle = " + "'" + selectedMovie.movieTitle + "'";
+            String sql = "DELETE FROM movies WHERE movieTitle = " + "'" + selectedMovie.getMovieTitle().getValue() + "'";
 
             PreparedStatement preparedStmt = conn.prepareStatement(sql);
 
@@ -360,6 +387,21 @@ public class Controller {
             preparedStmt.executeUpdate();
 
             System.out.println("Record Deleted");
+
+            ObservableList<Movie> databaseMovieList = FXCollections.observableArrayList();
+            String title ="", year="", consensus="", criticScore="", audienceScore="", metascore="", userScore="", average="";
+
+            movie_title_col.setCellValueFactory(cellData -> cellData.getValue().getMovieTitle());
+            movie_year_col.setCellValueFactory(cellData -> cellData.getValue().getMovieYear());
+            critic_col.setCellValueFactory(cellData -> cellData.getValue().getRottenCriticScore());
+            audience_col.setCellValueFactory(cellData -> cellData.getValue().getRottenAudienceScore());
+            metascore_col.setCellValueFactory(cellData -> cellData.getValue().getMetaScore());
+            user_col.setCellValueFactory(cellData -> cellData.getValue().getMetaUserScore());
+            average_col.setCellValueFactory(cellData -> cellData.getValue().getAverageScore());
+
+            Statement sql_statement = null; ResultSet rs1 = null;
+
+            fillTable(conn);
 
             conn.close();
             System.out.println("Connection closed.");
@@ -370,7 +412,7 @@ public class Controller {
         }
     }
 
-    void fillTable(){
+    void fillTable(Connection conn){
 
         ObservableList<Movie> databaseMovieList = FXCollections.observableArrayList();
         String title ="", year="", consensus="", criticScore="", audienceScore="", metascore="", userScore="", average="";
@@ -383,54 +425,99 @@ public class Controller {
         user_col.setCellValueFactory(cellData -> cellData.getValue().getMetaUserScore());
         average_col.setCellValueFactory(cellData -> cellData.getValue().getAverageScore());
 
+        Statement sql_statement = null; ResultSet rs1 = null;
 
-        Connection conn = null; Statement sql_statement = null; ResultSet rs1 = null;
-        try {
-            // create a mysql database connection
-            Class.forName(myDriver);
-            System.out.println("Driver Created");
+        if(conn == null){
+            try {
+                conn = DriverManager.getConnection(myUrl, link, linked);
+                System.out.println("Connection made");
 
-            conn = DriverManager.getConnection(myUrl, link, linked);
-            System.out.println("Connection made");
+                String getMoviesQuery = "SELECT movieTitle, movieYear, Consensus, rottenCriticScore, rottenAudienceScore, metaScore, " +
+                        "metaUserScore, averageScore FROM movies";
 
-            String getMoviesQuery = "SELECT movieTitle, movieYear, Consensus, rottenCriticScore, rottenAudienceScore, metaScore, " +
-                    "metaUserScore, averageScore FROM movies";
+                // create the java statement
+                sql_statement = conn.createStatement();
+                rs1 = sql_statement.executeQuery(getMoviesQuery);
 
-            // create the java statement
-            sql_statement = conn.createStatement();
-            rs1 = sql_statement.executeQuery(getMoviesQuery);
+                //Iterate through database and grab all records
+                while(rs1.next()) {
 
-            //Iterate through database and grab all records
-            while(rs1.next()) {
+                    title = rs1.getString(1);
+                    year = rs1.getString(2);
+                    consensus = rs1.getString(3);
+                    criticScore = rs1.getString(4);
+                    audienceScore = rs1.getString(5);
+                    metascore = rs1.getString(6);
+                    userScore = rs1.getString(7);
+                    average = rs1.getString(8);
 
-                title = rs1.getString(1);
-                year = rs1.getString(2);
-                consensus = rs1.getString(3);
-                criticScore = rs1.getString(4);
-                audienceScore = rs1.getString(5);
-                metascore = rs1.getString(6);
-                userScore = rs1.getString(7);
-                average = rs1.getString(8);
+                    databaseMovieList.add(new Movie(title, year, consensus, criticScore, audienceScore, metascore, userScore, average));
 
-                databaseMovieList.add(new Movie(title, year, consensus, criticScore, audienceScore, metascore, userScore, average));
-                System.out.println(title + year + consensus+ criticScore+ audienceScore+ metascore+ userScore+ average);
-            }//End of while
-            movie_Table.setItems(databaseMovieList);
-            System.out.println("Table Created");
+                }//End of while
+                movie_Table.setItems(databaseMovieList);
+                movie_Table.getSortOrder().add(movie_title_col);
+                System.out.println("Table Created");
 
-            conn.close();
-            System.out.println("Connection closed.");
+                conn.close();
+                System.out.println("Connection closed.");
 
-        }catch (Exception e){
-            System.err.println("Got an exception!");
-            System.err.println(e.getMessage());
+            }catch (Exception e){
+                System.err.println("Connection was null & Got an exception!");
+                System.err.println(e.getMessage());
+            }
+        }else{
+            try{
+                String getMoviesQuery = "SELECT movieTitle, movieYear, Consensus, rottenCriticScore, rottenAudienceScore, metaScore, " +
+                        "metaUserScore, averageScore FROM movies";
+
+                // create the java statement
+                sql_statement = conn.createStatement();
+                rs1 = sql_statement.executeQuery(getMoviesQuery);
+
+                //Iterate through database and grab all records
+                while(rs1.next()) {
+
+                    title = rs1.getString(1);
+                    year = rs1.getString(2);
+                    consensus = rs1.getString(3);
+                    criticScore = rs1.getString(4);
+                    audienceScore = rs1.getString(5);
+                    metascore = rs1.getString(6);
+                    userScore = rs1.getString(7);
+                    average = rs1.getString(8);
+
+                    databaseMovieList.add(new Movie(title, year, consensus, criticScore, audienceScore, metascore, userScore, average));
+
+                }//End of while
+                movie_Table.setItems(databaseMovieList);
+                movie_Table.getSortOrder().add(movie_title_col);
+                System.out.println("Table Created");
+
+            }catch (Exception e){
+                System.err.println("Connection was not null & Got an exception!");
+                System.err.println(e.getMessage());
+            }
         }
+
 
     }
 
-    void showContent(){
-        create_Button.setVisible(true);
-        delete_button.setVisible(true);
+    void showContent(String option){
+        boolean exitsts;
+
+        for(Movie title : movie_Table.getItems()){
+            String output = title.getMovieTitle().getValue();
+            if(option.equals(output)){
+                System.out.println("Exists");
+                create_Button.setVisible(false);
+                delete_button.setVisible(true);
+                break;
+            }else{
+                System.out.println("Does not exist");
+                create_Button.setVisible(true);
+                delete_button.setVisible(false);
+            }
+        }
         critic_Consensus_Label.setVisible(true);
     }
     void clear(){
@@ -438,11 +525,14 @@ public class Controller {
         delete_button.setVisible(false);
         movie_Title.setText(null);
         movie_Image.setImage(null);
+        consensus_Text_Label.setText(null);
+        critic_Percentage_Label.setText(null);
         critic_Score_Image.setImage(null);
+        audience_Percentage_Label.setText(null);
         audience_Score_Image.setImage(null);
         metascore_Label.setText(null);
-        critic_Percentage_Label.setText(null);
-        audience_Percentage_Label.setText(null);
+        user_score_Label.setText(null);
+        average_Percentage_Label.setText(null);
     }
 
 

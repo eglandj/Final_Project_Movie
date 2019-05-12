@@ -87,8 +87,8 @@
                </font>
             </Label>
             <Label fx:id="user_score_text_Label" alignment="CENTER" layoutX="639.0" layoutY="134.0" text="User Score" textAlignment="CENTER" />
-            <Button fx:id="create_Button" contentDisplay="CENTER" layoutX="610.0" layoutY="244.0" mnemonicParsing="false" onAction="#createButton" text="Create" textAlignment="CENTER" />
-            <Button fx:id="delete_button" layoutX="841.0" layoutY="244.0" mnemonicParsing="false" onAction="#deleteButton" text="Delete" />
+            <Button fx:id="create_Button" contentDisplay="CENTER" layoutX="809.0" layoutY="244.0" mnemonicParsing="false" onAction="#createButton" prefHeight="26.0" prefWidth="82.0" text="Create" textAlignment="CENTER" />
+            <Button fx:id="delete_button" layoutX="809.0" layoutY="244.0" mnemonicParsing="false" onAction="#deleteButton" prefHeight="26.0" prefWidth="82.0" text="Delete" />
             <TableView fx:id="movie_Table" layoutX="380.0" layoutY="288.0" prefHeight="313.0" prefWidth="510.0">
               <columns>
                 <TableColumn fx:id="movie_title_col" prefWidth="82.4000244140625" text="Movie Title" />
@@ -100,6 +100,7 @@
                   <TableColumn fx:id="average_col" prefWidth="81.5999755859375" text="Average" />
               </columns>
             </TableView>
+            <Button fx:id="update_Button" contentDisplay="CENTER" layoutX="698.0" layoutY="244.0" mnemonicParsing="false" onAction="#updateButton" prefHeight="26.0" prefWidth="82.0" text="Update" textAlignment="CENTER" />
             </children>
         </AnchorPane>
     </children>
