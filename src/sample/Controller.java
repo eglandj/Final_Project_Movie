@@ -518,13 +518,11 @@ public class Controller {
         for(Movie title : movie_Table.getItems()){
             String output = title.getMovieTitle().getValue();
             if(option.equals(output)){
-                System.out.println("Exists");
                 create_Button.setVisible(false);
                 update_Button.setVisible(true);
                 delete_button.setVisible(true);
                 break;
             }else{
-                System.out.println("Does not exist");
                 create_Button.setVisible(true);
                 update_Button.setVisible(false);
                 delete_button.setVisible(false);
