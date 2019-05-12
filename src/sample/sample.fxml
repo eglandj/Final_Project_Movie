@@ -88,19 +88,19 @@
             </Label>
             <Label fx:id="user_score_text_Label" alignment="CENTER" layoutX="639.0" layoutY="134.0" text="User Score" textAlignment="CENTER" />
             <Button fx:id="create_Button" contentDisplay="CENTER" layoutX="809.0" layoutY="244.0" mnemonicParsing="false" onAction="#createButton" prefHeight="26.0" prefWidth="82.0" text="Create" textAlignment="CENTER" />
+            <Button fx:id="update_Button" contentDisplay="CENTER" layoutX="698.0" layoutY="244.0" mnemonicParsing="false" onAction="#updateButton" prefHeight="26.0" prefWidth="82.0" text="Update" textAlignment="CENTER" />
             <Button fx:id="delete_button" layoutX="809.0" layoutY="244.0" mnemonicParsing="false" onAction="#deleteButton" prefHeight="26.0" prefWidth="82.0" text="Delete" />
-            <TableView fx:id="movie_Table" layoutX="380.0" layoutY="288.0" prefHeight="313.0" prefWidth="510.0">
+            <TableView fx:id="movie_Table" layoutX="293.0" layoutY="288.0" prefHeight="314.0" prefWidth="597.0">
               <columns>
-                <TableColumn fx:id="movie_title_col" prefWidth="82.4000244140625" text="Movie Title" />
-                <TableColumn fx:id="movie_year_col" prefWidth="78.39993286132812" text="Movie Year" />
-                  <TableColumn fx:id="critic_col" prefWidth="52.800048828125" text="Critic" />
-                  <TableColumn fx:id="audience_col" prefWidth="74.39996337890625" text="Audience" />
-                  <TableColumn fx:id="metascore_col" minWidth="0.0" prefWidth="83.19989013671875" text="Metascore" />
-                  <TableColumn fx:id="user_col" prefWidth="63.2000732421875" text="User" />
-                  <TableColumn fx:id="average_col" prefWidth="81.5999755859375" text="Average" />
+                <TableColumn fx:id="movie_title_col" prefWidth="108.0" text="Movie Title" />
+                <TableColumn fx:id="movie_year_col" prefWidth="76.0" text="Movie Year" />
+                  <TableColumn fx:id="critic_col" prefWidth="65.59994506835938" text="Critic" />
+                  <TableColumn fx:id="audience_col" prefWidth="71.99993896484375" text="Audience" />
+                  <TableColumn fx:id="metascore_col" minWidth="0.0" prefWidth="84.79998779296875" text="Metascore" />
+                  <TableColumn fx:id="user_col" prefWidth="90.4000244140625" text="User" />
+                  <TableColumn fx:id="average_col" prefWidth="103.199951171875" text="Average" />
               </columns>
             </TableView>
-            <Button fx:id="update_Button" contentDisplay="CENTER" layoutX="698.0" layoutY="244.0" mnemonicParsing="false" onAction="#updateButton" prefHeight="26.0" prefWidth="82.0" text="Update" textAlignment="CENTER" />
             </children>
         </AnchorPane>
     </children>
