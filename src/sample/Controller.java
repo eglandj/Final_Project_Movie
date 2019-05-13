@@ -324,7 +324,7 @@ public class Controller {
 
         try {
             Connection conn = DriverManager.getConnection(myUrl, link, linked);
-            System.out.println("Connection made");
+            //System.out.println("Connection made");
 
             // the mysql insert statement
             String query = "INSERT INTO movies (movieTitle, movieYear, Consensus, rottenCriticScore, rottenAudienceScore, " +
@@ -344,12 +344,12 @@ public class Controller {
 
             // execute the preparedstatement
             preparedStmt.execute();
-            System.out.println("Record Created");
+            //System.out.println("Record Created");
 
             fillTable(conn);
 
             conn.close();
-            System.out.println("Connection closed.");
+            //System.out.println("Connection closed.");
         }catch (Exception e){
             System.err.println("Got an exception!");
             System.err.println(e.getMessage());
@@ -361,7 +361,7 @@ public class Controller {
 
         try {
             Connection conn = DriverManager.getConnection(myUrl, link, linked);
-            System.out.println("Connection made");
+            //System.out.println("Connection made");
 
             // the mysql insert statement
             /*UPDATE `movies` SET `movieTitle`=[value-1],`movieYear`=[value-2],`Consensus`=[value-3],
@@ -384,12 +384,12 @@ public class Controller {
 
             // execute the preparedstatement
             preparedStmt.executeUpdate();
-            System.out.println("Record Updated");
+            //System.out.println("Record Updated");
 
             fillTable(conn);
 
             conn.close();
-            System.out.println("Connection closed.");
+            //System.out.println("Connection closed.");
         }catch (Exception e){
             System.err.println("Got an exception!");
             System.err.println(e.getMessage());
@@ -402,7 +402,7 @@ public class Controller {
         Movie selectedMovie = movieList.get(movie_Selector_Box.getSelectionModel().getSelectedItem());
         try {
             Connection conn = DriverManager.getConnection(myUrl, link, linked);
-            System.out.println("Connection made");
+            //System.out.println("Connection made");
 
             String sql = "DELETE FROM movies WHERE movieTitle = " + "'" + selectedMovie.getMovieTitle().getValue() + "'";
 
@@ -411,12 +411,12 @@ public class Controller {
             // execute the preparedstatement
             preparedStmt.executeUpdate();
 
-            System.out.println("Record Deleted");
+            //System.out.println("Record Deleted");
 
             fillTable(conn);
 
             conn.close();
-            System.out.println("Connection closed.");
+            //System.out.println("Connection closed.");
 
         }catch (Exception e){
             System.err.println("Got an exception!");
@@ -425,6 +425,14 @@ public class Controller {
     }
 
     void fillTable(Connection conn){
+
+        final JFrame frame = new JFrame();
+        JLabel label = new JLabel("Connecting to Database");
+        frame.setLayout(new FlowLayout());
+        frame.getContentPane().add(label);
+        frame.setSize(135, 100);
+        frame.setLocation(650,350);
+        frame.setVisible(true);
 
         ObservableList<Movie> databaseMovieList = FXCollections.observableArrayList();
         String title ="", year="", consensus="", criticScore="", audienceScore="", metascore="", userScore="", average="";
@@ -442,7 +450,7 @@ public class Controller {
         if(conn == null){
             try {
                 conn = DriverManager.getConnection(myUrl, link, linked);
-                System.out.println("Connection made");
+                //System.out.println("Connection made");
 
                 String getMoviesQuery = "SELECT movieTitle, movieYear, Consensus, rottenCriticScore, rottenAudienceScore, metaScore, " +
                         "metaUserScore, averageScore FROM movies";
@@ -468,10 +476,10 @@ public class Controller {
                 }//End of while
                 movie_Table.setItems(databaseMovieList);
                 movie_Table.getSortOrder().add(movie_title_col);
-                System.out.println("Table Created");
+                //System.out.println("Table Created");
 
                 conn.close();
-                System.out.println("Connection closed.");
+                //System.out.println("Connection closed.");
 
             }catch (Exception e){
                 System.err.println("Connection was null & Got an exception!");
@@ -503,15 +511,14 @@ public class Controller {
                 }//End of while
                 movie_Table.setItems(databaseMovieList);
                 movie_Table.getSortOrder().add(movie_title_col);
-                System.out.println("Table Created");
+                //System.out.println("Table Created");
 
             }catch (Exception e){
                 System.err.println("Connection was not null & Got an exception!");
                 System.err.println(e.getMessage());
             }
         }
-
-
+        frame.setVisible(false);
     }
 
     void showButtons(String option){
