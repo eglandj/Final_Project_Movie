@@ -28,8 +28,8 @@ import java.util.List;
 
 public class Controller {
 
-    private static final String link = "eglandj";
-    private static final String linked = "{f4YbHR6";
+    private static final String link = "user_user_user";
+    private static final String linked = "funfunfun";
 
     private static final String myDriver = "com.mysql.jdbc.Driver";
     private static final String myUrl = "jdbc:mysql://db4free.net:3306/final_project_4?verifyServerCertificate=false&useSSL=false";
@@ -103,26 +103,26 @@ public class Controller {
 
     @FXML
     private TableView<Movie> movie_Table;
-        @FXML
-        private TableColumn<Movie, String> movie_title_col;
+    @FXML
+    private TableColumn<Movie, String> movie_title_col;
 
-        @FXML
-        private TableColumn<Movie, String> movie_year_col;
+    @FXML
+    private TableColumn<Movie, String> movie_year_col;
 
-        @FXML
-        private TableColumn<Movie, String> critic_col;
+    @FXML
+    private TableColumn<Movie, String> critic_col;
 
-        @FXML
-        private TableColumn<Movie, String> audience_col;
+    @FXML
+    private TableColumn<Movie, String> audience_col;
 
-        @FXML
-        private TableColumn<Movie, String> metascore_col;
+    @FXML
+    private TableColumn<Movie, String> metascore_col;
 
-        @FXML
-        private TableColumn<Movie, String> user_col;
+    @FXML
+    private TableColumn<Movie, String> user_col;
 
-        @FXML
-        private TableColumn<Movie, String> average_col;
+    @FXML
+    private TableColumn<Movie, String> average_col;
 
     @FXML
     public void createButton(ActionEvent actionEvent) {
@@ -153,6 +153,7 @@ public class Controller {
             showButtons(optionMovie);
         }else{
             clear();
+            System.out.println(movie_Selector_Box.getValue());
         }
     }
 
@@ -430,7 +431,7 @@ public class Controller {
         JLabel label = new JLabel("Connecting to Database");
         frame.setLayout(new FlowLayout());
         frame.getContentPane().add(label);
-        frame.setSize(135, 100);
+        frame.setSize(140, 100);
         frame.setLocation(650,350);
         frame.setVisible(true);
 
@@ -522,18 +523,24 @@ public class Controller {
     }
 
     void showButtons(String option){
-        for(Movie title : movie_Table.getItems()){
-            String output = title.getMovieTitle().getValue();
-            if(option.equals(output)){
-                create_Button.setVisible(false);
-                update_Button.setVisible(true);
-                delete_button.setVisible(true);
-                break;
-            }else{
-                create_Button.setVisible(true);
-                update_Button.setVisible(false);
-                delete_button.setVisible(false);
+        if (movie_Table.getItems().toArray().length != 0){
+            System.out.println("yo");
+            for(Movie title : movie_Table.getItems()){
+                String output = title.getMovieTitle().getValue();
+                if(option.equals(output)){
+                    create_Button.setVisible(false);
+                    update_Button.setVisible(true);
+                    delete_button.setVisible(true);
+                    break;
+                }else{
+                    create_Button.setVisible(true);
+                    update_Button.setVisible(false);
+                    delete_button.setVisible(false);
+                }
             }
+        }else{
+            System.out.println("here");
+            create_Button.setVisible(true);
         }
         critic_Consensus_Label.setVisible(true);
     }
